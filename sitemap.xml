@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Main Terminal Emulator -->
   <url>
     <loc>https://looparchitect.github.io/godloop-os/</loc>
     <priority>1.00</priority>
+  </url>
+
+  <!-- Static Landing Page (recommended for SEO) -->
+  <url>
+    <loc>https://looparchitect.github.io/godloop-os/landing.html</loc>
+    <priority>0.90</priority>
   </url>
 </urlset>
