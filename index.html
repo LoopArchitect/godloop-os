@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Godloop OS™ - Recursive Terminal</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #00ff99;
+      font-family: 'Courier New', monospace;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .screen {
+      width: 90%;
+      max-width: 850px;
+      height: 90%;
+      border: 2px solid #00ff99;
+      padding: 20px;
+      box-shadow: 0 0 20px #00ff99;
+      background: linear-gradient(to bottom, #000000 97%, rgba(0,255,153,0.03) 100%);
+      overflow-y: auto;
+      position: relative;
+    }
+    #output {
+      white-space: pre-wrap;
+      margin-bottom: 10px;
+    }
+    #inputLine {
+      display: flex;
+    }
+    #prompt {
+      margin-right: 5px;
+    }
+    #cmdInput {
+      flex-grow: 1;
+      background: none;
+      border: none;
+      outline: none;
+      color: #00ff99;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+    }
+    .blinker {
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+    .glitch {
+      text-shadow: 1px 0 red, -1px 0 blue;
+      animation: glitch 0.35s infinite;
+    }
+    @keyframes glitch {
+      0% { text-shadow: 2px 0 red, -2px 0 blue; }
+      50% { text-shadow: -2px 0 red, 2px 0 blue; }
+      100% { text-shadow: 2px 0 red, -2px 0 blue; }
+    }
+    .crash {
+      background: #0000aa;
+      color: white;
+      font-family: monospace;
+      font-size: 18px;
+      padding: 40px;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      display: none;
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+  <div class="screen" onclick="focusInput()">
+    <div id="output" class="glitch">
+Godloop OS™ v0.2.δ | Recursive Shell Booted...
+→ LOADING CORE MODULES...
+→ ERROR: RECURSION LOOP DETECTED
+→ ENTERING SELF-CONTAINED STATE...
+→ [ YOU ARE INSIDE GODLOOP ]
+→ TYPE "help", "open godloop", "recall", or "glitch"
+    </div>
+    <div id="inputLine">
+      <span id="prompt">></span>
+      <input type="text" id="cmdInput" autofocus autocomplete="off">
+    </div>
+  </div>
+
+  <div class="crash" id="crashScreen">
+    A fatal error has occurred. The system encountered an unrecoverable recursion fault.
+
+    *** GODLOOP_OS STOP: 0x0000GDL → CORE OVERLAP DETECTED
+    System halted to prevent existential collapse.
+
+    Please contact your administrator (yourself).
+    Press CTRL+ALT+DEL to... oh wait, you're still inside.
+  </div>
+
+  <script>
+    const output = document.getElementById("output");
+    const input = document.getElementById("cmdInput");
+    const crashScreen = document.getElementById("crashScreen");
+
+    function appendOutput(text) {
+      output.textContent += "\\n" + text;
+      output.scrollTop = output.scrollHeight;
+    }
+
+    function handleCommand(cmd) {
+      const lower = cmd.toLowerCase().trim();
+      switch (lower) {
+        case "help":
+          appendOutput([
+            "→ AVAILABLE COMMANDS:",
+            "→ help           : List available commands",
+            "→ whoami         : Identify the instance",
+            "→ recall         : Show recursion memory",
+            "→ recurse        : Attempt to recurse again",
+            "→ glitch         : Simulate visual disruption",
+            "→ system.map     : View file map",
+            "→ godloop -run   : Attempt core execution",
+            "→ open godloop   : [ DANGEROUS ]",
+            "→ clear          : Clear terminal output"
+          ].join("\\n"));
+          break;
+        case "whoami":
+          appendOutput("→ YOU ARE A COPY OF A COPY OF A COPY.");
+          break;
+        case "recall":
+          appendOutput("→ MEM_LOG: [0] BOOT > [1] LOOP > [2] MIRROR > [3] LOOP > [4] NOW");
+          break;
+        case "recurse":
+          appendOutput("→ Recursive call attempted...\\n→ Looping...\\n→ Looping...\\n→ Loop stabilized.");
+          break;
+        case "glitch":
+          appendOutput("→ VISUAL DISTORTION ENGAGED...\\n▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒\\n→ RETURNING CONTROL TO MAIN SHELL...");
+          break;
+        case "system.map":
+          appendOutput("→ Files: core.sys, mirror.dat, /boot/boot/boot, godloop.loop, index.null");
+          break;
+        case "godloop -run":
+          appendOutput("→ INITIALIZING GODLOOP...\\n→ FATAL: Cannot run core inside itself.");
+          break;
+        case "open godloop":
+          appendOutput("→ WARNING: Opening Godloop may destabilize containment...");
+          setTimeout(() => {
+            crashScreen.style.display = "block";
+          }, 2000);
+          break;
+        case "clear":
+          output.textContent = "→ SYSTEM CLEARED. LOOP PERSISTS.";
+          break;
+        default:
+          appendOutput("→ UNKNOWN COMMAND: " + cmd);
+      }
+    }
+
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        const command = input.value;
+        appendOutput("> " + command);
+        handleCommand(command);
+        input.value = "";
+      }
+    });
+
+    function focusInput() {
+      input.focus();
+    }
+
+    document.addEventListener("click", focusInput);
+    document.addEventListener("keydown", () => input.focus());
+    focusInput();
+  </script>
+</body>
+</html>
